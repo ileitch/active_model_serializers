@@ -205,9 +205,11 @@ end
           if included_associations.include? name
             association_serializer = build_serializer(association)
 
-            # we must do this always because even if the current association is not
-            # embeded in root, it might have its own associations that are embeded in root
-            hash.merge!(association_serializer.embedded_in_root_associations) {|key, oldval, newval| [newval, oldval].flatten }
+            unless association_serializer.object.nil?
+              # we must do this always because even if the current association is not
+              # embeded in root, it might have its own associations that are embeded in root
+              hash.merge!(association_serializer.embedded_in_root_associations) {|key, oldval, newval| [newval, oldval].flatten }
+            end
 
             if association.embed_in_root?
               if association.embed_in_root_key?
